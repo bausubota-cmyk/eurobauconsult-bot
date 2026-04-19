@@ -1,4 +1,4 @@
-pyTelegramBotAPI
-requests
-httpx==0.27.0
 
+aiogram==2.25.1
+openai
+python-dotenv
