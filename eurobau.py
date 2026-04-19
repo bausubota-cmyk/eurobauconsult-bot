@@ -42,4 +42,4 @@ async def handle_photo(message: types.Message):
         await message.reply(f"Ошибка анализа: {str(e)}. Проверьте баланс.")
 
    if __name__ == '__main__': 
-    executor.start_polling(dp, skip_updates=True)
+        executor.start_polling(dp, skip_updates=True)
