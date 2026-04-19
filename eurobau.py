@@ -1,45 +1,35 @@
-import os
 import logging
-from aiogram import Bot, Dispatcher, types
-from aiogram.utils import executor
+from aiogram import Bot, Dispatcher, executor, types
 from openai import AsyncOpenAI
 
-# Загрузка ключей из Railway
-TOKEN = os.getenv("TELEGRAM_TOKEN")
-OPENAI_KEY = os.getenv("OPENAI_API_KEY")
-DEEPSEEK_KEY = os.getenv("DEEPSEEK_API_KEY")
+# 1. ТВОИ КЛЮЧИ НАПРЯМУЮ (БЕЗ ВОДЫ)
+TELEGRAM_TOKEN = "8258431851:AAE-U-AZ3BtD1NZa5xz0IwVsSHW1XHK91as"
+OPENAI_API_KEY = "sk-a9bb08ee2b4144f58205a9726821ae66"
 
-# Настройка клиента ИИ (Приоритет OpenAI)
-if OPENAI_KEY:
-    client = AsyncOpenAI(api_key=OPENAI_KEY, base_url="https://api.openai.com/v1")
-    AI_MODEL = "gpt-4o"
-    print("Используем OpenAI (gpt-4o)")
-else:
-    client = AsyncOpenAI(api_key=DEEPSEEK_KEY, base_url="https://api.deepseek.com/v1")
-    AI_MODEL = "deepseek-chat"
-    print("Используем DeepSeek")
-
-bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
+# 2. НАСТРОЙКА БОТА
 logging.basicConfig(level=logging.INFO)
+bot = Bot(token=TELEGRAM_TOKEN)
+dp = Dispatcher(bot)
+
+# Инициализация OpenAI
+client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-    await message.reply("Привет! Я твой инженерный ассистент. Пришли фото объекта для анализа.")
+    await message.reply("Инженерный ассистент Eurobau запущен и готов к работе!")
 
-@dp.message_handler(content_types=['photo'])
-async def handle_photo(message: types.Message):
-    await message.answer("Анализирую фото, подождите...")
+@dp.message_handler()
+async def handle_ai(message: types.Message):
     try:
-        # Здесь логика отправки фото в ИИ
-        # Используем переменную AI_MODEL для автоматического выбора
+        # Прямой запрос к OpenAI
         response = await client.chat.completions.create(
-            model=AI_MODEL,
-            messages=[{"role": "user", "content": "Проанализируй это фото на соответствие стандартам."}]
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": message.text}]
         )
-        await message.reply(response.choices[0].message.content)
+        await message.answer(response.choices[0].message.content)
     except Exception as e:
-        await message.reply(f"Ошибка анализа: {str(e)}. Проверьте баланс.")
+        await message.answer(f"Ошибка ИИ: {str(e)}")
 
-   if __name__ == '__main__': 
-        executor.start_polling(dp, skip_updates=True)
+# 3. ТОЧКА ЗАПУСКА (ОШИБКА 44 ИСПРАВЛЕНА)
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
