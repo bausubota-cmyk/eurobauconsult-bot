@@ -1,7 +1,6 @@
-FROM python:3.11-slim
-RUN apt-get update && apt-get install -y gcc python3-dev
+FROM python:3.10-slim
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir aiogram==2.25.1 openai python-dotenv
 COPY . .
 CMD ["python", "eurobau.py"]
