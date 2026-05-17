@@ -4,9 +4,9 @@ from aiogram import Bot, Dispatcher, executor, types
 from openai import AsyncOpenAI
 
 # 1. КОНФИГУРАЦИЯ КЛЮЧЕЙ
-TELEGRAM_TOKEN = "8258431851:AAE-U-AZ3BtD1NZa5xz0IwVsSHW1XHK91as"
-OPENAI_API_KEY = "sk-a9bb08ee2b4144f58205a9726821ae66"
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY") # Берется из Variables
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 # 2. ИНИЦИАЛИЗАЦИЯ СИСТЕМ
 logging.basicConfig(level=logging.INFO)
